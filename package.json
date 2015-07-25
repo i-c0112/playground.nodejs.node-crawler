@@ -19,6 +19,9 @@
   "license": "BSD",
   "dependencies": {
     "crawler": "~0.2.5",
-	"shelljs": "~0.2.6"
+    "shelljs": "~0.2.6"
+  },
+  "devDependencies": {
+    "eslint": "^0.24.1"
   }
 }
