@@ -1,4 +1,3 @@
-/*eslint-env node*/
 "use strict";
 var Crawler = require("crawler").Crawler;
 var shell = require("shelljs");
@@ -18,7 +17,7 @@ var c = new Crawler({
 		$("#rank > div").eq(2).children().eq(1).find("li > a").each(function (index, a) {
 			shell.echo($(a).attr("href"));
 		});
-	}
+	},
 });
 
 c.queue([{
