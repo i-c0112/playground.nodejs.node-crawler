@@ -9,8 +9,13 @@ var extractDesc = function (error, result, $) {
 		return;
 	}
 	$ = cheerio.load(result.body);
-	var fname = $("span[itemprop=productID]").text();
-	shell.echo($(".desc").html()).to("output/" + fname + ".html");
+	var fname = "output/" + $("span[itemprop=productID]").text() + ".html";
+	shell.echo("").to(fname);
+	shell.echo(
+		$("span[itemprop=name]").html() +
+		$("span[itemprop=description]").html() +
+		$(".desc").eq(1).html()
+	).toEnd(fname);
 };
 
 var c = new Crawler({
