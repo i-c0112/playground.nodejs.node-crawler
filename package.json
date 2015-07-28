@@ -1,19 +1,17 @@
 {
-  "name": "youtubecrawler",
+  "name": "crawlyahoomall",
   "version": "0.0.0",
-  "description": "Youtube mining",
+  "description": "Yahoo Mall(TW) crawling",
   "main": "app.js",
   "scripts": {
     "test": "node app.js"
   },
   "repository": {
     "type": "git",
-    "url": "http://git.csie.nuu.edu.tw/mxp/YouTubeCrawler.git"
+    "url": "https://github.com/i-c0112/playground.nodejs.node-crawler.git"
   },
   "keywords": [
-    "Youtube",
-    "data",
-    "mining"
+    "crawler"
   ],
   "author": "HungChun (Mxp)",
   "license": "BSD",
