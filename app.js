@@ -14,7 +14,8 @@ var extractDesc = function (error, result, $) {
 	shell.echo(
 		"<p>" + $("span[itemprop=name]").html() + "<p/>" +
 		"<p>" + $("span[itemprop=description]").html() + "<p/>" +
-		"<p>" + $(".desc").eq(1).html() + "<p/>"
+		"<p>" + $(".desc").eq(1).html() + "<p/>" +
+		"<p>" + $("#ypsid .pic").not(".bigpic").html() + "<p/>"
 	).toEnd(fname);
 };
 
