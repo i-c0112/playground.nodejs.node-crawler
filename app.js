@@ -12,9 +12,9 @@ var extractDesc = function (error, result, $) {
 	var fname = "output/" + $("span[itemprop=productID]").text() + ".html";
 	shell.echo("").to(fname);
 	shell.echo(
-		$("span[itemprop=name]").html() +
-		$("span[itemprop=description]").html() +
-		$(".desc").eq(1).html()
+		"<p>" + $("span[itemprop=name]").html() + "<p/>" +
+		"<p>" + $("span[itemprop=description]").html() + "<p/>" +
+		"<p>" + $(".desc").eq(1).html() + "<p/>"
 	).toEnd(fname);
 };
 
