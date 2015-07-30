@@ -9,6 +9,7 @@
 
 	```
 	git clone https://github.com/i-c0112/playground.nodejs.node-crawler.git crawl && cd crawl
+	git checkout experiment-cookie
 	npm install
 	```
 
