@@ -2,6 +2,8 @@
 var Crawler = require("crawler").Crawler;
 var shell = require("shelljs");
 var cheerio = require("cheerio");
+var request = require("request");
+var fs = require("fs");
 
 var c = new Crawler({
 	"maxConnections": 10,
@@ -41,7 +43,33 @@ function parseGallery(error, result, $) {
 		return;
 	}
 	$ = cheerio.load(result.body);
-	$("#gdt .gdtm a").each(function (index, a) {
+	var pageLinks = $("#gdt .gdtm a");
+	pageLinks.each(function (index, a) {
 		shell.echo(a.attribs.href);
 	});
+	c.queue({
+		uri: pageLinks.get(0).attribs.href,
+		headers: {Cookie: cookie},
+		callback: parsePage,
+	});
+}
+
+function parsePage(error, result, $) {
+	if (error) {
+		shell.echo(error);
+		return;
+	}
+	$ = cheerio.load(result.body);
+
+	shell.echo("Parsing a page...");
+	shell.echo($("body").html());
+	shell.echo("\n\nFinding img...");
+	var img = $("#i3 a img");
+	shell.echo(img.length);
+	shell.echo(img.get(0));
+
+	request({
+		uri: img.get(0).attribs.src,
+		headers: {Cookie: cookie},
+	}).pipe(fs.createWriteStream("output/ehentai.jpg"));
 }
