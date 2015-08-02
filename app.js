@@ -65,7 +65,7 @@ function crawlGallery(error, result, $) {
 
 	var pageLinks = $("#gdt .gdtm a");
 	pageLinks.each(function (index, a) {
-		shell.echo(a.attribs.href);
+		shell.echo("Found links:\n" + a.attribs.href);
 		c.queue({
 			uri: a.attribs.href,
 			headers: {Cookie: cookie},
@@ -104,5 +104,5 @@ function downloadPage(error, result, $) {
 	request({
 		uri: src,
 		headers: {Cookie: cookie},
-	}).pipe(fs.createWriteStream("output/ehentai-" + token.gid + "-" + token.pageNum + ".jpg"));
+	}).pipe(fs.createWriteStream("output/ehentai-" + token.gid + "-" + token.pageNum + src.match(/\.\w+$/)[0]));
 }
