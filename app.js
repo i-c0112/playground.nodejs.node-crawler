@@ -61,6 +61,8 @@ function crawlGallery(error, result, $) {
 		return;
 	}
 	$ = cheerio.load(result.body);
+	shell.echo("Crawling:\n" + result.uri);
+
 	var pageLinks = $("#gdt .gdtm a");
 	pageLinks.each(function (index, a) {
 		shell.echo(a.attribs.href);
@@ -69,6 +71,21 @@ function crawlGallery(error, result, $) {
 			headers: {Cookie: cookie},
 			callback: downloadPage,
 		});
+	});
+
+	// exclude prev, next navigator
+	var numThumbnailPages = $(".ptt td").length - 2;
+	var current = Number($(".ptt .ptds").text());
+	shell.echo(current + " / " + numThumbnailPages);
+	if (current === numThumbnailPages) {
+		return;
+	}
+	var tmp = result.uri.replace(/\?p=\d+/, "");
+	tmp += "?p=" + current;
+	c.queue({
+		uri: tmp,
+		headers: {Cookie: cookie},
+		callback: crawlGallery,
 	});
 }
 
