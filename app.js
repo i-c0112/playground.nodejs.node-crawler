@@ -22,6 +22,24 @@ c.queue([{
 	callback: checkIfLogin,
 }]);
 
+var utils = (function (){
+	return {
+		getTokenFromPath: function (path){
+			if (typeof path.split !== "function"){
+				throw new TypeError("path is not a string!");
+			}
+			// "/s/<pageToken>/<gid>-<pageNum>"
+			path = path.split("/");
+			var tmp = path[3].split("-");
+			return {
+				pageNum: tmp[1],
+				pageToken: path[2],
+				gid: tmp[0],
+			};
+		},
+	};
+})();
+
 function checkIfLogin(error, result, $) {
 	// bugfix: crawler somehow fail to load cheerio into $
 	if (error) {
@@ -33,11 +51,11 @@ function checkIfLogin(error, result, $) {
 	c.queue({
 		uri: "http://g.e-hentai.org/g/837796/576f26a4ed/",
 		headers: {Cookie: cookie},
-		callback: parseGallery,
+		callback: crawlGallery,
 	});
 }
 
-function parseGallery(error, result, $) {
+function crawlGallery(error, result, $) {
 	if (error) {
 		shell.echo(error);
 		return;
@@ -49,30 +67,25 @@ function parseGallery(error, result, $) {
 		c.queue({
 			uri: a.attribs.href,
 			headers: {Cookie: cookie},
-			callback: parsePage,
+			callback: downloadPage,
 		});
 	});
 }
 
-function parsePage(error, result, $) {
+function downloadPage(error, result, $) {
 	if (error) {
 		shell.echo(error);
 		return;
 	}
 	$ = cheerio.load(result.body);
 
-	// "/s/<pageHash>/<galleryHash>-<pageNum>"
-	var path = result.req.path.split("/");
-	// var pageHash = path[1];
-	path = path[3].split("-");
-	var galleryHash = path[0];
-	var pageNum = path[1];
-	shell.echo("Parsing page " + pageNum + "...");
-	var img = $("#i3 a img");
-	shell.echo(img.get(0).attribs.src);
+	var token = utils.getTokenFromPath(result.req.path);
+	shell.echo("Parsing page " + token.pageNum + "...");
+	var src = $("#i3 a img").get(0).attribs.src;
+	shell.echo(src);
 
 	request({
-		uri: img.get(0).attribs.src,
+		uri: src,
 		headers: {Cookie: cookie},
-	}).pipe(fs.createWriteStream("output/ehentai-" + galleryHash + "-" + pageNum + ".jpg"));
+	}).pipe(fs.createWriteStream("output/ehentai-" + token.gid + "-" + token.pageNum + ".jpg"));
 }
