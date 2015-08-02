@@ -46,11 +46,11 @@ function parseGallery(error, result, $) {
 	var pageLinks = $("#gdt .gdtm a");
 	pageLinks.each(function (index, a) {
 		shell.echo(a.attribs.href);
-	});
-	c.queue({
-		uri: pageLinks.get(0).attribs.href,
-		headers: {Cookie: cookie},
-		callback: parsePage,
+		c.queue({
+			uri: a.attribs.href,
+			headers: {Cookie: cookie},
+			callback: parsePage,
+		});
 	});
 }
 
@@ -61,15 +61,18 @@ function parsePage(error, result, $) {
 	}
 	$ = cheerio.load(result.body);
 
-	shell.echo("Parsing a page...");
-	shell.echo($("body").html());
-	shell.echo("\n\nFinding img...");
+	// "/s/<pageHash>/<galleryHash>-<pageNum>"
+	var path = result.req.path.split("/");
+	// var pageHash = path[1];
+	path = path[3].split("-");
+	var galleryHash = path[0];
+	var pageNum = path[1];
+	shell.echo("Parsing page " + pageNum + "...");
 	var img = $("#i3 a img");
-	shell.echo(img.length);
-	shell.echo(img.get(0));
+	shell.echo(img.get(0).attribs.src);
 
 	request({
 		uri: img.get(0).attribs.src,
 		headers: {Cookie: cookie},
-	}).pipe(fs.createWriteStream("output/ehentai.jpg"));
+	}).pipe(fs.createWriteStream("output/ehentai-" + galleryHash + "-" + pageNum + ".jpg"));
 }
