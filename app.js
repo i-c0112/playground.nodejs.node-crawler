@@ -69,10 +69,11 @@ function parsePage(error, result, $) {
 	var pageNum = path[1];
 	shell.echo("Parsing page " + pageNum + "...");
 	var img = $("#i3 a img");
-	shell.echo(img.get(0).attribs.src);
+	var src = img.get(0).attribs.src;
+	shell.echo(src);
 
 	request({
-		uri: img.get(0).attribs.src,
+		uri: src,
 		headers: {Cookie: cookie},
-	}).pipe(fs.createWriteStream("output/ehentai-" + galleryHash + "-" + pageNum + ".jpg"));
+	}).pipe(fs.createWriteStream("output/ehentai-" + galleryHash + "-" + pageNum + src.match(/\.\w+$/)[0]));
 }
