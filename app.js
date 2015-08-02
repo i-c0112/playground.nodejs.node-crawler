@@ -48,8 +48,14 @@ function checkIfLogin(error, result, $) {
 	}
 	$ = cheerio.load(result.body);
 	shell.echo("Login successfully. Detected running client: " + $("table:has(th:contains(Client)):has(th:contains(ID)) td a").text());
+	var userInput = process.argv.length > 2 ? process.argv[2] : null;
+	if (userInput.indexOf("http://g.e-hentai.org/g/") === -1){
+		shell.echo("Error: Not a E-Hentai gallery!");
+		shell.exit(2);
+	}
+
 	c.queue({
-		uri: "http://g.e-hentai.org/g/837796/576f26a4ed/",
+		uri: userInput ? userInput : "http://g.e-hentai.org/g/837796/576f26a4ed/",
 		headers: {Cookie: cookie},
 		callback: crawlGallery,
 	});
